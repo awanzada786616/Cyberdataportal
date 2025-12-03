@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Port | User Dashboard</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 (For Stylish Notifications) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #f2f4f8; 
+            margin: 0;
+        }
+
+        /* --- AUTH SCREEN STYLES --- */
+        #authSection { 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        #authSection::before {
+            content: '';
+            position: absolute;
+            top: -50px; left: -50px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(75,108,183,0.4) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        #authSection::after {
+            content: '';
+            position: absolute;
+            bottom: -50px; right: -50px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(255,193,7,0.2) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .auth-card { 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px; 
+            border-radius: 15px; 
+            width: 100%; 
+            max-width: 400px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255,255,255,0.5);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .auth-logo {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 5px 15px rgba(75, 108, 183, 0.4);
+        }
+        .auth-logo i { font-size: 30px; color: #fff; }
+        .auth-title { color: #182848; font-weight: 700; letter-spacing: 1px; }
+
+        .input-group-text { background: #f8f9fa; border-right: none; color: #4b6cb7; border-color: #ced4da; }
+        .auth-input { border-left: none; padding: 12px; }
+        .auth-input:focus { box-shadow: none; border-color: #ced4da; }
+        
+        .btn-auth {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            border: none;
+            padding: 12px;
+            font-size: 1rem;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(24, 40, 72, 0.3);
+            color: white;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(24, 40, 72, 0.4);
+            background: linear-gradient(90deg, #3a5ca8 0%, #101c33 100%);
+        }
+        .link-switch { color: #4b6cb7; text-decoration: none; font-weight: 600; }
+        .link-switch:hover { color: #182848; text-decoration: underline; }
+
+        /* --- DASHBOARD STYLES --- */
+        #appSection { padding-bottom: 80px; }
+        .custom-navbar {
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-title-badge {
+            background-color: #ffc107;
+            color: #000;
+            font-weight: 700;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .info-card, .notice-board, .purchase-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+        .notice-board { border-left: 5px solid #ffc107; color: #444; font-size: 0.85rem; }
+        .card-label { color: #3366cc; font-weight: 600; font-size: 0.95rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .data-box {
+            background: #f8f9fa; border: 1px solid #ced4da; padding: 10px; border-radius: 5px; 
+            font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between; color: #333;
+        }
+        .form-select, .form-control-dash {
+            background-color: #f1f3f5; border: 1px solid #ced4da; padding: 12px; border-radius: 6px; font-size: 0.9rem; width: 100%;
+        }
+        .btn-purchase {
+            background-color: #ccc; color: #fff; font-weight: 600; width: auto; padding: 10px 30px; 
+            border-radius: 20px; margin-top: 15px; border: none; display: block; margin-left: auto; margin-right: auto; transition: 0.3s;
+        }
+        .btn-purchase.active { background-color: #4b6cb7; cursor: pointer; }
+        .btn-purchase.active:hover { background-color: #182848; }
+        .pending-title { font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .request-item { background: #fff; padding: 12px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
+        .status-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- AUTH SECTION -->
+    <div id="authSection">
+        <div class="auth-card">
+            <div class="auth-logo"><i class="fas fa-shield-alt"></i></div>
+            <div class="text-center mb-4">
+                <h4 class="auth-title">CYBER PORT</h4>
+                <p class="text-muted small">Welcome, please login to continue</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                    <input type="email" id="loginEmail" class="form-control auth-input" placeholder="Email Address" required>
+                </div>
+                <div class="mb-4 input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="loginPass" class="form-control auth-input" placeholder="Password" required>
+                </div>
+                <button class="btn w-100 fw-bold btn-auth">LOGIN</button>
+            </form>
+            
+            <p class="text-center mt-4 small text-secondary">
+                Don't have an account? <a href="#" class="link-switch" onclick="toggleReg()">Register Now</a>
+            </p>
+            
+            <!-- Register Form -->
+            <form id="regForm" style="display:none;" class="mt-3">
+                <div class="alert alert-warning py-2 small"><i class="fas fa-info-circle"></i> Create a new secure account.</div>
+                <div class="mb-3 input-group">
+                    <span class="input-group-text"><i class="fas fa-user-plus"></i></span>
+                    <input type="email" id="regEmail" class="form-control auth-input" placeholder="New Email Address" required>
+                </div>
+                <div class="mb-4 input-group">
+                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                    <input type="password" id="regPass" class="form-control auth-input" placeholder="Create Password" required>
+                </div>
+                <button class="btn w-100 fw-bold btn-auth" style="background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);">SIGN UP</button>
+                <p class="text-center mt-3 small"><a href="#" class="link-switch" onclick="toggleReg()">Back to Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="appSection" style="display: none;">
+        <div class="custom-navbar">
+            <img src="https://cdn-icons-png.flaticon.com/512/295/295128.png" width="40" alt="Logo" class="rounded-circle bg-white p-1">
+            <div class="nav-title-badge">CYBER PORT</div>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+
+        <div class="container mt-4">
+
+            <!-- User Info -->
+            <div class="info-card">
+                <div class="card-label"><i class="fas fa-user"></i> Username:</div>
+                <div class="data-box">
+                    <span id="displayEmail">Loading...</span>
+                    <i class="fas fa-copy text-secondary" style="cursor:pointer" onclick="copyEmail()"></i>
+                </div>
+            </div>
+
+            <!-- Balance -->
+            <div class="info-card">
+                <div class="card-label"><i class="fas fa-wallet"></i> Current Balance:</div>
+                <div class="data-box">
+                    <span><i class="fas fa-wallet text-success me-2"></i> <span id="userBal">0</span> PKR</span>
+                    <i class="fas fa-sync-alt text-primary" style="cursor:pointer" onclick="location.reload()"></i>
+                </div>
+                <div class="text-end mt-2">
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#depositModal">+ Add Balance</button>
+                </div>
+            </div>
+
+            <!-- Notice -->
+            <div class="notice-board">
+                <i class="fas fa-bell"></i> Assalamu Alaikum! Orders take 10-20 minutes to become active depending on the server load.
+            </div>
+
+            <!-- Purchase -->
+            <div class="purchase-card">
+                <div class="pending-title"><i class="fas fa-shopping-cart"></i> Purchase Form</div>
+                <label class="fw-bold small mb-2"><i class="fas fa-sitemap"></i> Select Your Option:</label>
+                <select class="form-select mb-3" id="serviceSelect" onchange="handleServiceSelect()">
+                    <option value="" selected disabled>Choose option</option>
+                    <option disabled>Loading services...</option>
+                </select>
+
+                <div id="dynamicInputs" style="display:none;">
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="fw-bold">Price:</small>
+                        <small class="fw-bold text-primary"><span id="priceDisplay">0</span> PKR</small>
+                    </div>
+                    <div id="grpCNIC" class="mb-3" style="display:none;">
+                        <label class="fw-bold small mb-1"><i class="fas fa-id-card"></i> CNIC Number:</label>
+                        <input type="text" id="inpCNIC" class="form-control-dash" placeholder="Enter CNIC number">
+                    </div>
+                    <div id="grpPhone" class="mb-3" style="display:none;">
+                        <label class="fw-bold small mb-1"><i class="fas fa-phone-alt"></i> Phone Number:</label>
+                        <input type="text" id="inpPhone" class="form-control-dash" placeholder="Enter phone number">
+                    </div>
+                </div>
+
+                <button id="btnPurchase" class="btn-purchase" onclick="confirmOrder()" disabled>
+                    <i class="fas fa-shopping-cart"></i> Purchase Now
+                </button>
+            </div>
+
+            <!-- Pending Requests -->
+            <div class="info-card mt-3">
+                <div class="pending-title"><i class="fas fa-clock"></i> Pending Requests</div>
+                <div id="ordersList" class="bg-light border rounded p-2" style="max-height: 250px; overflow-y: auto;">
+                    <small class="text-muted text-center d-block">No pending requests.</small>
+                </div>
+            </div>
+
+            <div class="text-center mt-4 mb-5 text-muted small">Developer | © 2024 Cyber Port</div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div class="modal fade" id="depositModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Deposit Funds</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>Easypaisa:</strong> <span id="epNum">Loading...</span><br>Min Deposit: 400 PKR
+                    </div>
+                    <form id="depForm">
+                        <input type="number" id="depAmt" class="form-control mb-2" placeholder="Amount Sent" required>
+                        <input type="text" id="depTrx" class="form-control" placeholder="Trx ID" required>
+                        <button class="btn btn-primary w-100 mt-3">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIDIO LIVE CHAT -->
+    <script src="//code.tidio.co/uenifm98qobxmzc77sv3lpqkmty985vm.js" async></script>
+
+    <!-- FIREBASE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, setDoc, getDoc, onSnapshot, query, where, increment, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyADJISrQY1JAtouawLdcWGJrqbFJKyusbQ",
+            authDomain: "cyberport-f320e.firebaseapp.com",
+            databaseURL: "https://cyberport-f320e-default-rtdb.firebaseio.com",
+            projectId: "cyberport-f320e",
+            storageBucket: "cyberport-f320e.firebasestorage.app",
+            messagingSenderId: "549894694554",
+            appId: "1:549894694554:web:d64cc77c8c2696f0aae123"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let curUser = null;
+        let curBal = 0;
+        let servicesData = [];
+
+        // --- HELPER FOR TOASTS ---
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+        });
+
+        window.toggleReg = () => { 
+            const l=document.getElementById('loginForm');
+            const r=document.getElementById('regForm'); 
+            const title = document.querySelector('.auth-title');
+            if(l.style.display=='none'){ l.style.display='block'; r.style.display='none'; title.innerText="CYBER PORT"; }
+            else{ l.style.display='none'; r.style.display='block'; title.innerText="REGISTER"; } 
+        };
+
+        // LOGIN
+        document.getElementById('loginForm').addEventListener('submit', (e)=>{ 
+            e.preventDefault(); 
+            signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPass').value)
+            .then(()=>{
+                Toast.fire({ icon: 'success', title: 'Login Successful' });
+            })
+            .catch(e => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: e.message.replace('Firebase:', '').trim(),
+                    confirmButtonColor: '#4b6cb7'
+                });
+            }); 
+        });
+
+        // REGISTER
+        document.getElementById('regForm').addEventListener('submit', async(e)=>{
+            e.preventDefault();
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, document.getElementById('regEmail').value, document.getElementById('regPass').value);
+                await setDoc(doc(db,"users",cred.user.uid), { email: cred.user.email, balance: 0 });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Welcome!',
+                    text: 'Account Created Successfully!',
+                    confirmButtonColor: '#11998e'
+                });
+            } catch(e){ 
+                Swal.fire({ icon: 'error', title: 'Registration Failed', text: e.message });
+            }
+        });
+
+        window.logout = () => {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be logged out!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Logout!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    signOut(auth);
+                }
+            })
+        };
+
+        onAuthStateChanged(auth, async(u)=>{
+            if(u){
+                curUser = u;
+                document.getElementById('authSection').style.display='none';
+                document.getElementById('appSection').style.display='block';
+                document.getElementById('displayEmail').innerText = u.email;
+                const ur = doc(db,"users",u.uid);
+                const s = await getDoc(ur);
+                if(!s.exists()) await setDoc(ur, { email: u.email, balance: 0 });
+                startApp();
+            } else {
+                document.getElementById('authSection').style.display='flex';
+                document.getElementById('appSection').style.display='none';
+            }
+        });
+
+        function startApp(){
+            onSnapshot(doc(db,"users",curUser.uid), (s)=>{ if(s.exists()) { curBal = s.data().balance || 0; document.getElementById('userBal').innerText = curBal; }});
+
+            onSnapshot(collection(db,"services"), (s)=>{
+                const select = document.getElementById('serviceSelect');
+                select.innerHTML = '<option value="" selected disabled>Choose option</option>';
+                servicesData = [];
+                s.forEach(d=>{
+                    const v = d.data();
+                    servicesData.push({ id: d.id, ...v });
+                    select.innerHTML += `<option value="${d.id}">${v.name}</option>`;
+                });
+            });
+
+            const q = query(collection(db,"orders"), where("userId","==",curUser.uid));
+            onSnapshot(q, (s)=>{
+                const l = document.getElementById('ordersList');
+                l.innerHTML='';
+                if(s.empty) { l.innerHTML='<small class="text-muted d-block text-center">No pending requests.</small>'; return; }
+                s.forEach(d=>{
+                    const o = d.data();
+                    let badgeColor = o.status === 'pending' ? 'bg-warning text-dark' : 'bg-success';
+                    let btn = '';
+                    if(o.status === 'completed' && o.imageUrl) {
+                        btn = `<br><a href="${o.imageUrl}" target="_blank" class="btn btn-xs btn-success mt-1 py-0" style="font-size:10px;">View Result</a>`;
+                    }
+                    l.innerHTML += `
+                    <div class="request-item">
+                        <div class="d-flex justify-content-between">
+                            <strong>${o.serviceName}</strong>
+                            <span class="badge ${badgeColor}">${o.status}</span>
+                        </div>
+                        <div class="small text-muted mt-1">${o.cnic ? 'CNIC: '+o.cnic : ''} ${o.phone ? '| Ph: '+o.phone : ''}</div>
+                        ${btn}
+                    </div>`;
+                });
+            });
+
+            getDocs(collection(db,"settings")).then(s=>{ if(!s.empty) document.getElementById('epNum').innerText = s.docs[0].data().easypaisaNumber || "N/A"; });
+        }
+
+        window.handleServiceSelect = () => {
+            const select = document.getElementById('serviceSelect');
+            const selectedId = select.value;
+            const service = servicesData.find(s => s.id === selectedId);
+            if(service) {
+                document.getElementById('dynamicInputs').style.display = 'block';
+                document.getElementById('priceDisplay').innerText = service.price;
+                const showCnic = service.reqCnic !== false; 
+                const showPhone = service.reqPhone !== false;
+                document.getElementById('grpCNIC').style.display = showCnic ? 'block' : 'none';
+                document.getElementById('grpPhone').style.display = showPhone ? 'block' : 'none';
+                const btn = document.getElementById('btnPurchase');
+                btn.classList.add('active'); btn.disabled = false; btn.style.backgroundColor = "#4b6cb7";
+            }
+        };
+
+        window.confirmOrder = async() => {
+            const select = document.getElementById('serviceSelect');
+            const selectedId = select.value;
+            const service = servicesData.find(s => s.id === selectedId);
+            if(!service) return;
+
+            const cVal = document.getElementById('inpCNIC').value;
+            const pVal = document.getElementById('inpPhone').value;
+
+            if(document.getElementById('grpCNIC').style.display !== 'none' && !cVal) 
+                return Swal.fire({ icon: 'warning', title: 'Missing Info', text: 'Please enter CNIC number.' });
+            
+            if(document.getElementById('grpPhone').style.display !== 'none' && !pVal) 
+                return Swal.fire({ icon: 'warning', title: 'Missing Info', text: 'Please enter Phone number.' });
+
+            if(curBal < service.price) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'Insufficient Balance!',
+                    text: 'You do not have enough funds for this service.',
+                    confirmButtonText: 'Add Funds',
+                    confirmButtonColor: '#d33'
+                }).then((res)=>{
+                    if(res.isConfirmed) {
+                        const modal = new bootstrap.Modal(document.getElementById('depositModal'));
+                        modal.show();
+                    }
+                });
+            }
+
+            const btn = document.getElementById('btnPurchase');
+            btn.innerHTML = "Processing..."; btn.disabled = true;
+
+            try {
+                await updateDoc(doc(db,"users",curUser.uid), { balance: increment(-service.price) });
+                await addDoc(collection(db,"orders"), {
+                    userId: curUser.uid, serviceName: service.name, price: service.price, cnic: cVal, phone: pVal, status: 'pending', timestamp: new Date()
+                });
+                
+                Swal.fire({ icon: 'success', title: 'Success', text: 'Order Placed Successfully!' });
+                
+                select.value = "";
+                document.getElementById('dynamicInputs').style.display = 'none';
+                document.getElementById('inpCNIC').value = ""; document.getElementById('inpPhone').value = "";
+                btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase Now'; btn.classList.remove('active'); btn.style.backgroundColor = "#ccc";
+
+            } catch(e){ 
+                Swal.fire({ icon: 'error', title: 'Order Failed', text: e.message });
+                btn.disabled = false; btn.innerHTML = '<i class="fas fa-shopping-cart"></i> Purchase Now'; 
+            }
+        };
+
+        window.copyEmail = () => {
+            const text = document.getElementById('displayEmail').innerText;
+            navigator.clipboard.writeText(text);
+            Toast.fire({ icon: 'success', title: 'Email copied to clipboard' });
+        };
+
+        document.getElementById('depForm').addEventListener('submit', async(e)=>{
+            e.preventDefault();
+            try {
+                await addDoc(collection(db,"deposits"), {
+                    userId: curUser.uid, userEmail: curUser.email, amount: Number(document.getElementById('depAmt').value), trxId: document.getElementById('depTrx').value, status: 'pending', timestamp: new Date()
+                });
+                
+                Swal.fire({ icon: 'success', title: 'Request Sent', text: 'Deposit request submitted successfully!' });
+                
+                document.getElementById('depForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('depositModal')).hide();
+            } catch(e){ 
+                Swal.fire({ icon: 'error', title: 'Error', text: e.message });
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
