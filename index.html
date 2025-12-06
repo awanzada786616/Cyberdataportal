@@ -156,105 +156,55 @@
     </style>
 </head>
 <body>
-    <!-- WhatsApp Floating Button (LEFT) -->
-<!-- Replace PHONE_NUMBER with international format (e.g. 923001234567 for +92 300 1234567) -->
-<!-- Replace DEFAULT_TEXT if you want a prefilled message (URL-encoded) -->
-<div id="whatsapp-float">
-  <a id="whatsapp-link" href="https://wa.me/584263146980?text=Hello%20I%20want%20to%20ask%20about%20your%20service" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
-    <!-- inline WhatsApp SVG icon -->
-    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
-      <path fill="white" d="M20.52 3.48A11.9 11.9 0 0012 .5C6.21.5 1.5 5.21 1.5 11c0 1.96.52 3.88 1.53 5.58L1 23l6.9-2.24A11.47 11.47 0 0012 22.5c5.79 0 10.5-4.71 10.5-10.5 0-3.02-1.18-5.83-3.98-8.52zM12 20.5c-1.05 0-2.07-.16-3.03-.47l-.21-.07-4.11 1.34 1.31-3.98-.08-.22A8.38 8.38 0 013.5 11c0-4.69 3.81-8.5 8.5-8.5 4.69 0 8.5 3.81 8.5 8.5S16.69 20.5 12 20.5z"/>
-      <path fill="white" d="M17.34 14.08c-.28-.14-1.66-.82-1.92-.91-.26-.09-.45-.14-.64.14s-.73.91-.9 1.1c-.16.19-.31.21-.59.07-.28-.14-1.18-.43-2.25-1.39-.83-.78-1.39-1.74-1.55-2.02-.16-.28-.02-.43.12-.57.12-.12.28-.31.42-.47.14-.16.18-.28.28-.47.09-.19.05-.36-.02-.5-.07-.14-.64-1.54-.88-2.1-.23-.55-.47-.48-.64-.49-.16-.01-.35-.01-.54-.01s-.5.07-.76.36c-.26.29-1 1-1 2.44 0 1.44 1.03 2.84 1.17 3.04.13.19 2.02 3.08 4.9 4.32 2.88 1.24 2.88.83 3.4.78.52-.05 1.66-.68 1.9-1.34.23-.66.23-1.23.16-1.35-.07-.12-.26-.19-.54-.33z"/>
+    <!-- WhatsApp Support Button -->
+<a href="https://wa.me/584263146980?text=Hello%20I%20need%20help" 
+   class="whatsapp-support" target="_blank">
+
+    <svg viewBox="0 0 32 32" width="26" height="26" fill="#fff">
+        <path d="M16.001 3.2c-7.02 0-12.8 5.78-12.8 12.8 0 2.26.59 4.46 1.71 6.41L3.2 28.8l6.54-1.71a12.73 12.73 0 006.26 1.61c7.02 0 12.8-5.78 12.8-12.8s-5.78-12.8-12.8-12.8zm0 23.04c-2.02 0-4-.53-5.74-1.54l-.41-.24-3.88 1.02 1.03-3.78-.25-.39a10.47 10.47 0 01-1.67-5.71c0-5.82 4.76-10.58 10.58-10.58s10.58 4.76 10.58 10.58-4.76 10.58-10.58 10.58zm5.53-7.92c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.66.15-.2.3-.77.97-.94 1.17-.17.2-.34.22-.63.08-.3-.15-1.25-.46-2.38-1.47-.88-.82-1.47-1.82-1.63-2.11-.17-.3-.02-.45.13-.6.14-.14.3-.33.45-.5.15-.17.2-.3.3-.5.1-.2.06-.38-.02-.53-.07-.15-.7-1.67-.96-2.27-.25-.6-.5-.52-.68-.53-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.36-.27.3-1.04 1.04-1.04 2.53 0 1.49 1.07 2.93 1.22 3.14.15.2 2.11 3.22 5.12 4.52 3.01 1.3 3.01.87 3.55.82.54-.05 1.73-.71 1.99-1.39.25-.69.25-1.28.17-1.4-.08-.12-.27-.2-.56-.34z"/>
     </svg>
-  </a>
-</div>
+</a>
 
 <style>
-  /* container sits fixed on left center */
-  #whatsapp-float {
+/* SAME STYLE as your blue support button (but green) */
+.whatsapp-support {
     position: fixed;
-    left: 18px;               /* distance from left edge, change if needed */
-    bottom: 22vh;             /* vertical position — uses viewport so it's centered-ish on mobile too */
-    z-index: 9999;
+    left: 16px;              /* Bottom-left perfect alignment */
+    bottom: 22px;            /* Same height as blue support button */
+    width: 60px;
+    height: 60px;
+    background: #25D366;     /* WhatsApp green */
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 54px;
-    height: 54px;
-    border-radius: 999px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); /* WhatsApp green */
-    transition: transform 150ms ease, box-shadow 150ms ease;
-  }
-
-  /* anchor fills the circle */
-  #whatsapp-float a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    color: #fff;
     text-decoration: none;
-    outline: none;
-  }
+    z-index: 9999;
 
-  /* hover/focus effects */
-  #whatsapp-float:hover,
-  #whatsapp-float:focus-within {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-  }
+    /* SAME shadow + softness like your blue button */
+    box-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.15),
+        0 8px 22px rgba(0, 0, 0, 0.20);
 
-  /* For small screens, move a bit up and make a little larger tap target */
-  @media (max-width: 600px) {
-    #whatsapp-float {
-      left: 14px;
-      bottom: 14vh;
-      width: 64px;
-      height: 64px;
+    transition: 0.25s ease;
+}
+
+.whatsapp-support:hover {
+    transform: scale(1.1);
+    box-shadow: 
+        0 6px 14px rgba(0, 0, 0, 0.2),
+        0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 600px) {
+    .whatsapp-support {
+        width: 66px;
+        height: 66px;
+        bottom: 24px;
     }
-    #whatsapp-float svg {
-      width: 26px;
-      height: 26px;
-    }
-  }
-
-  /* Respect prefers-reduced-motion */
-  @media (prefers-reduced-motion: reduce) {
-    #whatsapp-float { transition: none; }
-  }
+}
 </style>
-
-<script>
-  // Optional: ensure mobile uses whatsapp:// if app installed (improves UX)
-  (function () {
-    const a = document.getElementById('whatsapp-link');
-    // Extract current href
-    const href = a.getAttribute('href');
-
-    // On click, try deep link first on mobile (this won't throw — just tries)
-    a.addEventListener('click', function (e) {
-      const isMobile = /Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      if (isMobile) {
-        // convert https wa.me to whatsapp://send?phone=...
-        try {
-          const url = new URL(href);
-          const phone = url.pathname.replace('/', '');
-          const text = url.searchParams.get('text') || '';
-          // use whatsapp scheme
-          const deep = 'whatsapp://send?phone=' + phone + '&text=' + encodeURIComponent(text);
-          // set link to deep link briefly (no problem if not supported)
-          a.setAttribute('href', deep);
-          // allow normal behavior to continue (opens in app if available)
-          // after a short delay restore the original https URL so desktop still works
-          setTimeout(() => a.setAttribute('href', href), 1500);
-        } catch (err) {
-          // if anything fails, do nothing — fallback to wa.me
-        }
-      }
-    }, { passive: true });
-  })();
-</script>
 
     <!-- AUTH SECTION -->
     <div id="authSection">
